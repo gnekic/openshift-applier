@@ -1,0 +1,6 @@
+---
+openshift_cluster_content:
+- object: clusterresourcequota
+  content:
+  - name: test-clusterresourcequota
+    file: "{{ inventory_dir }}/../resources/test-clusterresourcequota.yml.j2"

@@ -1,0 +1,11 @@
+fatal: [localhost]: FAILED! = The conditional check 'cmp_deploymentconfig.metadata != got_deploymentconfig.metadata or cmp_deploymentconfig.spec != got_deploymentconfig.spec' failed. The error was: An unhandled exception occurred while templating '{{ provision_deploymentconfig | combine(ignore_differences, recursive=True) }}'. Error was a <class 'ansible.errors.AnsibleFilterError'>, original message: |combine expects dictionaries, got Undefined
+
+The error appears to have been in '/home/gnekic/hackathon/openshift-applier/tests/gartest.yml': line 67, column 5, but may
+be elsewhere in the file depending on the exact syntax problem.
+
+The offending line appears to be:
+
+
+  - name: Verify DeploymentConfig
+    ^ here
+
