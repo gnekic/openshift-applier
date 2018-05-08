@@ -1,5 +1,5 @@
 openshift_connection_server:   https://192.168.42.206:8443
 openshift_connection_insecure_skip_tls_verify: "true"
-openshift_connection_token:  t2AMp2RVWFUIlEIg6eNSFy6i8iW1MIr_bMEzJWECGh4
+openshift_connection_token: wmS_b-sZ5QxoTjET_0Zquf7fkngVG3oyJw7GPIpKxXo 
 openshift_test_login_username: admin
 openshift_test_login_password: admin 

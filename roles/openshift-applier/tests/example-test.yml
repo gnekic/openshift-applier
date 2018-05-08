@@ -32,36 +32,13 @@
 
   roles:
   - openshift-applier
-#  tasks:
-#  - name: Create Project 
-#    command: >-
-#      {{ test_oc_cmd }} new-project provision-test 
 
-#  - role: openshift-applier
-#    process-one-entry:
-#    with_times: "{{ openshift_cluster_content }}"
-#    loop_control:
-#      loop_var: content
-#    vars:
-#      openshift_cluster_content:
-#      - object: deploymentconfig
-#        content:
-#        - name: test-deploymentconfig
-#          template: "resources/deploymentconfig/template.yml"
-#          #template: "{{ provision_deploymentconfig }}"
-#          params: "resources/deploymentconfig/params1"
-#          namespace: provision-test
-#    register: processed_template
-
-
-  tasks:
-  - name: Process Ish
-    command: >-
-      oc process \
-        -f "resources/deploymentconfig/template.yml" \
-        -n provision-test \
-        --param-file="resources/deploymentconfig/params1" | \
-      tee test.json 
+- name: Test Provision
+  hosts: localhost
+  connection: local
+  vars:
+  roles:
+  - role: openshift-applier 
     vars:
       openshift_cluster_content:
       - object: deploymentconfig
@@ -70,53 +47,23 @@
           template: "resources/deploymentconfig/template.yml"
           params: "resources/deploymentconfig/params1"
           namespace: provision-test
-    register: processed_template
+      ansible_connection: local
 
 
-  - name: test
-    debug:
-      msg: "{{ lookup('template', test.json) | from_json }}"
-
-
-
-- name: Test Provision
+- name: Delete Provision
   hosts: localhost
   connection: local
-  vars:
-    provision_deploymentconfig: "{{ lookup('template', 'resources/deploymentconfig/template.yml') | from_yaml }}"
-#  roles:
-#  - role: openshift-applier 
-#    vars:
-#      openshift_cluster_content:
-#      - object: deploymentconfig
-#        content:
-#        - name: test-deploymentconfig
-#          #template: "resources/deploymentconfig/template.yml"
-#          template: "{{ provision_deploymentconfig }}"
-#          params: "resources/deploymentconfig/params1"
-#          namespace: provision-test
-#      ansible_connection: local
-  tasks:
-  - name: Get DeploymentConfig
-    command: >-
-      {{ test_oc_cmd }} export deploymentconfig
-      test-deploymentconfig -n provision-test -o json 
-    register: get_deploymentconfig
-    changed_when: false
+  vars: 
+    openshift_cluster_content:
+    - object: deploymentconfig
+      content:
+      - name: test-deploymentconfig
+        template: "resources/deploymentconfig/template.yml"
+        params: "resources/deploymentconfig/params1"
+        namespace: provision-test
+        template_action: delete
+    ansible_connection: local
 
-  - name: Verify DeploymentConfig
-    fail:
-      msg: |
-        DeploymentConfig not defined as expected
-        >>>
-        {{ cmp_deploymentconfig | to_yaml }}
-        ===
-        {{ got_deploymentconfig | to_yaml }}
-        <<<
-    vars:
-      got_deploymentconfig: "{{ get_deploymentconfig.stdout | from_json | combine(ignore_differences, recursive=True) }}"
-      cmp_deploymentconfig: "{{ processed_template.stdout | combine(ignore_differences, recursive=True) }}"
-    when: >-
-      cmp_deploymentconfig.metadata != got_deploymentconfig.metadata or
-      cmp_deploymentconfig.spec != got_deploymentconfig.spec
-
+  roles:
+  - role: openshift-applier
+     
