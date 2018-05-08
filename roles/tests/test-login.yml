@@ -1,9 +1,0 @@
----
-- hosts: localhost
-  connection: local
-  vars_files:
-  - login-creds.yml
-  roles:
-  - role: openshift-provision
-    openshift_clusters:
-    - {}
