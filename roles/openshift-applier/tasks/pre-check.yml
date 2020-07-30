@@ -16,6 +16,9 @@
       with_items:
         - "{{ client }} version -o yaml"
         - "{{ client }} version"
+    - debug:
+        msg: "{{ client_vers_check }}"
+
 
     # Block to handle oc command output
     # - only proceed if the oc command returned any output
