@@ -14,7 +14,7 @@
       ignore_errors: true
       register: client_vers_check
       with_items:
-#        - "{{ client }} version -o yaml"
+        - "{{ client }} version -o yaml"
         - "{{ client }} version"
 
     # Block to handle oc command output
